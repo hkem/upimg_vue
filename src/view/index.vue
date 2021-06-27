@@ -8,7 +8,6 @@
         <el-row class="middle-row">
             <el-col :xs="1" :sm="2" :md="4" :lg="6" :xl="8" class="default-clo"></el-col>
             <el-col :xs="22" :sm="20" :md="16" :lg="12" :xl="8" class="default-clo">
-                
                     <div class="middle-upload">
                         <el-upload
                         class="upload-demo"
@@ -23,14 +22,10 @@
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                         <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过10M</div>
                         </el-upload>
-                        <el-row class="submit-row" v-if="showimgbool">
-                            <el-image class="show-img" :src="imgurl" :fit="contain"></el-image>
-                        </el-row>
                     </div>
-                    <div class="middle-url">
-                        <div class="url-blade">图片地址：</div>
-                        <div class="url-val"><el-input :value="imgurl" placeholder="请输入内容"></el-input></div>
-                    </div>    
+                    <div class="img-li" v-for="item in imglist" :key="item.id">
+                        <imagepath v-bind:imgurl="item.imagepath"></imagepath>
+                    </div>
             </el-col>        
             <el-col :xs="1" :sm="2" :md="4" :lg="4" :xl="8" class="default-clo"></el-col>
         </el-row>
@@ -42,23 +37,28 @@
 <script>
 
 
+import imagepath from "../components/individual/ImagePath.vue"
+
 export default {
     name:"index",
     data(){
         return {
-            imgurl:"",
-            contain:"contain",
-            showimgbool:false
+            imglistcount:0,
+            imglist:[
+                // {id:1,imagepath:"http://159.75.47.58:8080/upimg/uploaded/2021/06/27/a4e56677-378b-44f4-b8ac-9ad38aedf126.jpg"},
+                // {id:2,imagepath:"http://159.75.47.58:8080/upimg/uploaded/2021/06/27/a4e56677-378b-44f4-b8ac-9ad38aedf126.jpg"},
+                // {id:3,imagepath:"http://159.75.47.58:8080/upimg/uploaded/2021/06/27/a4e56677-378b-44f4-b8ac-9ad38aedf126.jpg"},
+                // {id:4,imagepath:"http://159.75.47.58:8080/upimg/uploaded/2021/06/27/a4e56677-378b-44f4-b8ac-9ad38aedf126.jpg"}
+            ]
         }
         
     },
      components: {
-
+        "imagepath":imagepath
           
   },
     methods:{
         BeforeUpload(file){
-            
             const isJPG = file.type === "image/jpg" || file.type === "image/jpeg" || file.type === "image/png";
             const issize = file.size / 1024 / 1024 < 2;
             if(!isJPG){
@@ -90,8 +90,9 @@ export default {
                     let resdata = response.data;
                     if(resdata.code === 1){
                         let data = resdata.data;
-                        _this.imgurl = data.img_url;
-                        _this.showimgbool = true;
+                        //加入列表
+                        _this.imglistcount += 1;
+                        _this.imglist.unshift({id:_this.imglistcount,imagepath:data.img_url});
                     }else{
                         this.$message({
                             showClose: true,
@@ -108,9 +109,6 @@ export default {
                         type: 'error'
                     });
                 }
-
-
-                console.log(response);
             })
             .catch(function (error) {
                 console.log(error);
@@ -144,32 +142,10 @@ export default {
     .default-clo{
         border: 1px solid #ffffff;
     }
-    .submit-row{
-        line-height: 80px;
-        text-align: center;
-        height: 500px;
+    .img-li{
         width: 100%;
         margin-top: 20px;
-    }
-    .show-img{
-         height: 500px;
-        width: 100%;
-    }
-    .middle-url{
         float: left;
-        width: 100%;
-        margin-top: 20px;
     }
-   
-    .url-blade{
-        width: 100%;
-        text-align: center;
-        float: left;
-        line-height: 40px;
-        text-align: left;
-    }
-    .url-val{
-        float: left;
-        width: 100%;
-    }
+    
 </style>

@@ -24,7 +24,7 @@ Vue.prototype.$axios = axios
 axios.defaults.baseURL = '/upimg'
 
 //引入js
-import "./js/comm"
+
 import "./js/require_context"
 
 /* eslint-disable no-new */
