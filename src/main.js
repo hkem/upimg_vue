@@ -3,12 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import axios from 'axios';
+import Vuex from 'vuex'
+Vue.use(Vuex)
 
-//iview
-// import iView from 'iview'; // 导入组件库
-// import 'iview/dist/styles/iview.css'; // 导入样式
-// Vue.use(iView);
 
 //ElementUI
 import ElementUI from 'element-ui';
@@ -16,21 +13,28 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/display.css';
 Vue.use(ElementUI);
 
+import api from './assets/js/api'
+Vue.prototype.$api = api
 
 Vue.config.productionTip = false
 
+//引入公共js
+import common from './assets/js/common'
+Vue.prototype.$common = common
 
-Vue.prototype.$axios = axios
-axios.defaults.baseURL = '/upimg'
+
+import store from './store'
+Vue.prototype.$url_web = "http://159.75.47.58:8080/upimg"
 
 //引入js
-
-import "./js/require_context"
+import "./assets/js/require_context"
+import "./assets/css/index.css";
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  store,
 })

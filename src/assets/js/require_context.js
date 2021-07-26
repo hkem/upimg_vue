@@ -1,7 +1,7 @@
 //自动注册 
 import Vue from "vue"
 const requireComponent = require.context(
-  "./../components/comm",
+  "./../../components/comm",
   false
 )
 

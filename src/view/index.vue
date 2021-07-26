@@ -2,7 +2,7 @@
 
 <div class="app-content">
 <!-- 首页 -->
-<Headview></Headview>
+<Headview v-bind:menuindex="'1'"></Headview>
 <!-- 中间 -->
  <div class="middle-content">
         <el-row class="middle-row">
@@ -26,6 +26,7 @@
                     <div class="img-li" v-for="item in imglist" :key="item.id">
                         <imagepath v-bind:imgurl="item.imagepath"></imagepath>
                     </div>
+                    <div class="dibu"></div>
             </el-col>        
             <el-col :xs="1" :sm="2" :md="4" :lg="4" :xl="8" class="default-clo"></el-col>
         </el-row>
@@ -84,12 +85,10 @@ export default {
             let fileObj = item.file;
             const form = new FormData(); // FormData 对象
             form.append("file", fileObj); // 文件对象  'upload'是后台接收的参数名
-            this.$axios.post('/upload/uploadimg',form)
-            .then(function (response) {
-                if(response.status === 200){
-                    let resdata = response.data;
-                    if(resdata.code === 1){
-                        let data = resdata.data;
+            this.$api.uploadimg(form).then(res => {
+                let resdata = res.data;
+                    if(res.code === 1){
+                        let data = res.data;
                         //加入列表
                         _this.imglistcount += 1;
                         _this.imglist.unshift({id:_this.imglistcount,imagepath:data.img_url});
@@ -100,20 +99,7 @@ export default {
                             type: 'error'
                         });
                     }
-
-
-                }else{
-                    this.$message({
-                        showClose: true,
-                        message: '上传失败，请联系管理员',
-                        type: 'error'
-                    });
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-            
+            })  
         }
 
     }
@@ -123,8 +109,8 @@ export default {
 <style>
     /*  */
     .app-content{
-        position:relative;
-        
+        /* position:relative; */
+        min-height: 100vh;
     }
     /* 中间 */
     .middle-content{
@@ -146,6 +132,11 @@ export default {
         width: 100%;
         margin-top: 20px;
         float: left;
+    }
+    .dibu{
+        float: left;
+        width: 100%;
+        height: 200px;
     }
     
 </style>
